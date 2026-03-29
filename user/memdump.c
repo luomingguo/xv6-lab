@@ -61,5 +61,57 @@ void
 memdump(char *fmt, char *data)
 {
   // Your code here.
+  while(*fmt) {
+    switch(*fmt) {
+        
+      case 'i': {
+        int val = *(int *)data;
+        printf("%d\n", val);
+        data += 4;
+        break;
+      }
+
+      case 'p': {
+        uint64 val = *(uint64 *)data;
+        printf("%lx\n", val);
+        data += 8;
+        break;
+      }
+
+      case 'h':{
+        short val = *(short *)data;
+        printf("%d\n", val);
+        data += 2;
+        break;
+      }
+
+      case 'c': {
+        char val = *data;
+        printf("%c\n", val);
+        data++;
+        break;
+      }
+      case 's': {
+          uint64 addr;
+          memmove(&addr, data, 8);
+          char *str = (char *)addr;
+          printf("%s\n", str);
+          data += 8;
+          break;
+      }
+      case 'S': {
+        printf("%s\n", data);
+        // 跳到字符串末尾（包括 '\0'）
+        while (*data) data++;
+        data++; // skip '\0'
+        break;
+      }
+
+      default:
+        // ignore unknown format
+        break;
+      }
+    fmt++;
+  }
 
 }
