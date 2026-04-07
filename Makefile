@@ -195,44 +195,14 @@ UPROGS=\
 	$U/_logstress\
 	$U/_forphan\
 	$U/_dorphan\
-
-
-
-ifeq ($(LAB),util)
-UPROGS += \
 	$U/_sleep\
 	$U/_sixfive\
-	$U/_find
-endif
-### ENDIF
-
-
-ifeq ($(LAB),syscall)
-UPROGS += \
+	$U/_uptime\
+	$U/_xargs\
+	$U/_find\
+	$U/_sandbox\
 	$U/_attack\
-	$U/_secret
-endif
-
-ifeq ($(LAB),lock)
-UPROGS += \
-	$U/_stats
-endif
-
-ifeq ($(LAB),traps)
-UPROGS += \
-	$U/_call\
-	$U/_bttest
-endif
-
-ifeq ($(LAB),lazy)
-UPROGS += \
-	$U/_lazytests
-endif
-
-ifeq ($(LAB),cow)
-UPROGS += \
-	$U/_cowtest
-endif
+	$U/_secret\
 
 ifeq ($(LAB),thread)
 UPROGS += \
@@ -279,15 +249,16 @@ UPROGS += \
 	$U/_nettest
 endif
 
-UEXTRA=
-ifeq ($(LAB),util)
+# ifeq ($(LAB),util)
 	UEXTRA += user/findtest.sh
+	UEXTRA += user/xargstest.sh
 	UEXTRA += user/sixfive.txt
 	UPROGS += $U/_memdump
-endif
-ifeq ($(LAB),syscall)
+# endif
+
+# ifeq ($(LAB),syscall)
 	UEXTRA += user/exec.sh
-endif
+# endif
 
 fs.img: mkfs/mkfs README $(UEXTRA) $(UPROGS)
 	mkfs/mkfs fs.img README $(UEXTRA) $(UPROGS)

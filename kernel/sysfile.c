@@ -16,6 +16,8 @@
 #include "file.h"
 #include "fcntl.h"
 
+#include "syscall.h"
+
 // Fetch the nth word-sized system call argument as a file descriptor
 // and return both the descriptor and the corresponding struct file.
 static int
@@ -309,11 +311,14 @@ sys_open(void)
   struct file *f;
   struct inode *ip;
   int n;
+  struct proc *p = myproc();
 
   argint(1, &omode);
   if((n = argstr(0, path, MAXPATH)) < 0)
     return -1;
-
+  if (p->mask & (1U << SYS_open) && strncmp(p->allow_path, path, MAXPATH)) {
+    return -1;
+  }
   begin_op();
 
   if(omode & O_CREATE){
@@ -460,7 +465,6 @@ sys_exec(void)
     if(fetchstr(uarg, argv[i], PGSIZE) < 0)
       goto bad;
   }
-
   int ret = kexec(path, argv);
 
   for(i = 0; i < NELEM(argv) && argv[i] != 0; i++)
